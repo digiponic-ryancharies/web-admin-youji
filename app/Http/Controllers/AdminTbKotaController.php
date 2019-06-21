@@ -33,7 +33,9 @@
 			$this->col[] = ["label"=>"Kode BSNI","name"=>"kode"];
 			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan"];
 			$this->col[] = ["label"=>"Dijangkau","name"=>"is_visible","callback"=>function($row) {
-				return ($row->is_visible == 1) ? 'Ya' : 'Tidak';
+				$class = ($row->is_visible == 1) ? 'success' : 'danger';
+				$column_value = ($row->is_visible == 1) ? 'Ya' : 'Tidak';
+				return '<span class="label label-'.$class.'">'.$column_value.'</span>';
 			}];			
 			# END COLUMNS DO NOT REMOVE THIS LINE
 

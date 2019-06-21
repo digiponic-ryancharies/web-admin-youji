@@ -33,7 +33,9 @@
 			// $this->col[] = ["label"=>"Kode","name"=>"kode"];
 			$this->col[] = ["label"=>"Kecamatan","name"=>"keterangan"];
 			$this->col[] = ["label"=>"Dijangkau","name"=>"is_visible","callback"=>function($row) {
-				return ($row->is_visible == 1) ? 'Ya' : 'Tidak';
+				$class = ($row->is_visible == 1) ? 'success' : 'danger';
+				$column_value = ($row->is_visible == 1) ? 'Ya' : 'Tidak';
+				return '<span class="label label-'.$class.'">'.$column_value.'</span>';
 			}];			
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -44,7 +46,7 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Kode Kota','name'=>'kode_kota','type'=>'hidden'];
 			// $this->form[] = ['label'=>'Kode','name'=>'kode','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','readonly'=>'true','value'=>$kode];
-			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];			
 			$this->form[] = ['label'=>'Dijangkau','name'=>'is_visible','type'=>'radio','validation'=>'required','width'=>'col-sm-10','dataenum'=>'0|Tidak;1|Ya'];
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -260,7 +262,8 @@
 	    |
 	    */
 	    public function hook_row_index($column_index,&$column_value) {
-	    	//Your code here
+			//Your code here
+			
 	    }
 
 	    /*

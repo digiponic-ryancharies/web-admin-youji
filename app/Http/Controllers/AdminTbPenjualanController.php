@@ -443,11 +443,7 @@
 	    public function hook_row_index($column_index,&$column_value) {
 			//Your code here
 			if($column_index==1){
-				if($column_value == 'mobile') {
-					$class = 'success';
-				}else{
-					$class = 'primary';
-				}
+				$class = ($column_value == 'mobile') ? 'success' : 'primary';
 				$column_value = '<span class="label label-'.$class.'">'.$column_value.'</span>';
 			}			
 	    }	
