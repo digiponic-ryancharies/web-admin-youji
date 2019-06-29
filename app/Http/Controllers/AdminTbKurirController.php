@@ -31,7 +31,7 @@
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Kode Area Kurir","name"=>"kode"];
-			$this->col[] = ["label"=>"Kurir","name"=>"kode_karyawan",'join'=>'tb_karyawan,nama'];
+			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			$kode = DB::table('tb_kurir')->max('id') + 1;
@@ -39,11 +39,11 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Kode Area Kurir','name'=>'kode','type'=>'text','width'=>'col-sm-10','readonly'=>'true','value'=>$kode];
-			$this->form[] = ['label'=>'Kurir','name'=>'kode_karyawan','type'=>'select2','validation'=>'required','width'=>'col-sm-10','datatable'=>'tb_karyawan,nama'];
-			$this->form[] = ['label'=>'Provinsi','name'=>'kode_provinsi','type'=>'select2','width'=>'col-sm-10','datatable'=>'tb_provinsi,keterangan','relationship_table'=>'tb_relasi_kurir_provinsi','datatable_ajax'=>'true'];
-			$this->form[] = ['label'=>'Kota','name'=>'kode_kota','type'=>'select2','width'=>'col-sm-10','datatable'=>'tb_kota,keterangan','relationship_table'=>'tb_relasi_kurir_kota','datatable_ajax'=>'true'];
-			$this->form[] = ['label'=>'Kecamatan','name'=>'kode_kecamatan','type'=>'select2','width'=>'col-sm-10','datatable'=>'tb_kecamatan,keterangan','relationship_table'=>'tb_relasi_kurir_kecamatan','datatable_ajax'=>'true'];
+			$this->form[] = ['label'=>'Kode Area Kurir','name'=>'kode','type'=>'text','width'=>'col-sm-10','readonly'=>'true','value'=>$kode];			
+			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'text','width'=>'col-sm-10','placeholder'=>'Cth: Area Malang Utara'];			
+			// $this->form[] = ['label'=>'Provinsi','name'=>'kode_provinsi','type'=>'select','width'=>'col-sm-10','datatable'=>'tb_provinsi,keterangan'];
+			// $this->form[] = ['label'=>'Kota','name'=>'kode_kota','type'=>'select','width'=>'col-sm-10','datatable'=>'tb_kota,keterangan','parent_select'=>'kode_provinsi'];
+			$this->form[] = ['label'=>'Kecamatan','name'=>'kode_kecamatan','type'=>'select2','width'=>'col-sm-10','datatable'=>'tb_kecamatan,keterangan','relationship_table'=>'tb_kurir_area','datatable_ajax'=>'true','datatable_where'=>'is_visible = 1'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

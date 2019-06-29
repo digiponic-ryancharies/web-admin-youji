@@ -5,78 +5,59 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminMdPengirimanController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminTbSliderController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
-			$this->orderby = "tanggal,desc";
+			$this->orderby = "id,desc";
 			$this->global_privilege = false;
-			$this->button_table_action = false;
-			$this->button_bulk_action = false;
+			$this->button_table_action = true;
+			$this->button_bulk_action = true;
 			$this->button_action_style = "button_icon";
-			$this->button_add = false;
-			$this->button_edit = false;
-			$this->button_delete = false;
-			$this->button_detail = false;
-			$this->button_show = false;
-			$this->button_filter = false;
+			$this->button_add = true;
+			$this->button_edit = true;
+			$this->button_delete = true;
+			$this->button_detail = true;
+			$this->button_show = true;
+			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = true;
-			$this->table = "tb_penjualan";
+			$this->button_export = false;
+			$this->table = "tb_slider";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Kurir","name"=>"id_kurir",'join'=>'tb_kurir,keterangan'];
 			$this->col[] = ["label"=>"Kode","name"=>"kode"];
-			$this->col[] = ["label"=>"Pengiriman","name"=>"tanggal","callback_php"=>'date("d-m-Y | H:i", strtotime($row->tanggal))','visible'=>false];			
-			$this->col[] = ["label"=>"Tanggal","name"=>"created_at","callback"=>function($row){
-				$str = '<p class="txt_pesan">Pesan : '.date("d-m-Y | H:i", strtotime($row->created_at)).'</p>';
-				$str .= '<p class="txt_kirim">Kirim : '.date("d-m-Y | H:i", strtotime($row->tanggal)).'</p>';
-				return $str;
+			$this->col[] = ["label"=>"Gambar","name"=>"gambar","image"=>true];
+			$this->col[] = ["label"=>"Keterangan","name"=>"keterangan"];
+			$this->col[] = ["label"=>"Status","name"=>"status",'callback'=>function($row){
+				return ($row->status == 1) ? 'Aktif' : 'Non Aktif';
 			}];
-			$this->col[] = ["label"=>"Pelanggan","name"=>"id_customer",'join'=>'tb_customer,name'];
-			$this->col[] = ["label"=>"Catatan","name"=>"keterangan"];
-			$this->col[] = ["label"=>"Alamat","name"=>"alamat_detail"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
+
+			$kode = DB::table('tb_slider')->max('id') + 1;
+			$kode = 'SLDR/'.str_pad($kode,3,0,STR_PAD_LEFT);
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			// $this->form[] = ['label'=>'Kode','name'=>'kode','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'textarea','validation'=>'required|string|min:5|max:5000','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Tanggal','name'=>'tanggal','type'=>'datetime','validation'=>'required|date_format:Y-m-d H:i:s','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Subtotal','name'=>'subtotal','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Pajak','name'=>'pajak','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Diskon Tipe','name'=>'diskon_tipe','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Diskon','name'=>'diskon','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Grand Total','name'=>'grand_total','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Users Id','name'=>'users_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'users,id'];
-			// $this->form[] = ['label'=>'Customer Id','name'=>'customer_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'customer,id'];
-			// $this->form[] = ['label'=>'Status','name'=>'status','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Metode Pembayaran','name'=>'metode_pembayaran','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			// $this->form[] = ['label'=>'Cabang','name'=>'id_cabang','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'cabang,id'];
-			// $this->form[] = ['label'=>'Platform','name'=>'platform','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Kode','name'=>'kode','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','readonly'=>'true','value'=>$kode];
+			$this->form[] = ['label'=>'Keterangan','name'=>'keterangan','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','placeholder'=>'Cth: Slider Promosi Diskon 50%'];
+			$this->form[] = ['label'=>'Gambar','name'=>'gambar','type'=>'upload','validation'=>'required|image|max:500','width'=>'col-sm-10','help'=>'Tipe file yang didukung: JPG, JPEG, PNG, GIF, BMP | max 500 KB'];
+			$this->form[] = ['label'=>'Status','name'=>'status','type'=>'radio','width'=>'col-sm-10','dataenum'=>'1|Aktif;0|Non Aktif','value'=>'1'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
 			//$this->form[] = ["label"=>"Kode","name"=>"kode","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Keterangan","name"=>"keterangan","type"=>"textarea","required"=>TRUE,"validation"=>"required|string|min:5|max:5000"];
-			//$this->form[] = ["label"=>"Tanggal","name"=>"tanggal","type"=>"datetime","required"=>TRUE,"validation"=>"required|date_format:Y-m-d H:i:s"];
-			//$this->form[] = ["label"=>"Subtotal","name"=>"subtotal","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Pajak","name"=>"pajak","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Diskon Tipe","name"=>"diskon_tipe","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Diskon","name"=>"diskon","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Grand Total","name"=>"grand_total","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Users Id","name"=>"users_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"users,id"];
-			//$this->form[] = ["label"=>"Customer Id","name"=>"customer_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"customer,id"];
-			//$this->form[] = ["label"=>"Status","name"=>"status","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Metode Pembayaran","name"=>"metode_pembayaran","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Cabang","name"=>"id_cabang","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"cabang,id"];
-			//$this->form[] = ["label"=>"Platform","name"=>"platform","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Keterangan","name"=>"keterangan","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Gambar","name"=>"gambar","type"=>"upload","required"=>TRUE,"validation"=>"required|image|max:3000","help"=>"Tipe file yang didukung: JPG, JPEG, PNG, GIF, BMP"];
+			//$this->form[] = ["label"=>"Created User","name"=>"created_user","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Updated User","name"=>"updated_user","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Deleted User","name"=>"deleted_user","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Status","name"=>"status","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			# OLD END FORM
 
 			/* 
@@ -118,13 +99,8 @@
 	        | Then about the action, you should code at actionButtonSelected method 
 	        | 
 	        */
-			$this->button_selected = array();
-			$kurir = DB::table('tb_kurir')->whereNull('deleted_at')->get();
-			foreach ($kurir as $k) {
-				$str = 'Set '.$k->keterangan;
-				$slug = str_slug($str,'_');
-				$this->button_selected[] = ['label'=>$str,'icon'=>'fa fa-check','name'=>$slug];
-			}			
+	        $this->button_selected = array();
+
 	                
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -135,7 +111,9 @@
 	        | 
 	        */
 	        $this->alert        = array();
-	                	        
+	                
+
+	        
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add more button to header button 
@@ -143,13 +121,10 @@
 	        | @label = Name of button 
 	        | @url   = URL Target
 	        | @icon  = Icon from Awesome.
-	        | @color  = Color Bootstrap.
-	        | @data_toggle  = If using modal.
-	        | @data_target  = If using modal.
 	        | 
 	        */
 	        $this->index_button = array();
-			// $this->index_button[] = ['label'=>'Atur Kurir','url'=>'#','color'=>'danger',"icon"=>"fa fa-print",'data_toggle'=>'modal','data_target'=>'#myModal'];
+
 
 
 	        /* 
@@ -193,27 +168,7 @@
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
-			$this->pre_index_html = '
-				<div id="myModal" class="modal fade" role="dialog">
-					<div class="modal-dialog">
-
-						<!-- Modal content-->
-						<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Modal Header</h4>
-						</div>
-						<div class="modal-body">
-							<p>Some text in the modal.</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						</div>
-						</div>
-
-					</div>
-				</div>
-			';
+	        $this->pre_index_html = null;
 	        
 	        
 	        
@@ -249,10 +204,7 @@
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
-			$this->style_css = "
-				// .txt_pesan{ color: #27ae60;	}
-				.txt_kirim{ color: #e84118;	}
-			";
+	        $this->style_css = NULL;
 	        
 	        
 	        
@@ -267,40 +219,7 @@
 	        $this->load_css = array();
 	        
 	        
-		}
-		
-		// public function getIndex()
-		// {
-		// 	if(!CRUDBooster::isView()) CRUDBooster::denyAccess();
-			
-		// 	$query = "SELECT
-		// 					tb_penjualan.id,
-		// 					tb_penjualan.kode,
-		// 					tb_penjualan.tanggal,
-		// 					tb_customer.`name` AS pelanggan,
-		// 					tb_customer.phone AS telepon,
-		// 					tb_customer.address AS alamat,
-		// 					tb_general.keterangan AS metode_pembayaran,
-		// 					tb_kecamatan.keterangan AS kecamatan,
-		// 					tb_kota.keterangan AS kota
-		// 				FROM
-		// 					tb_penjualan
-		// 				INNER JOIN tb_customer ON tb_penjualan.customer_id = tb_customer.id
-		// 				INNER JOIN tb_general ON tb_penjualan.metode_pembayaran = tb_general.id
-		// 				INNER JOIN tb_kota ON tb_customer.kode_kota = tb_kota.id
-		// 				INNER JOIN tb_kecamatan ON tb_customer.kode_kecamatan = tb_kecamatan.id
-		// 				";
-		// 	$data = [];
-		// 	$data['page_title'] = 'Pengiriman';
-		// 	$data['result'] = DB::select($query);
-				
-		// 	$this->cbView('index_pengiriman',$data);			
-		// }
-
-		public function getTerkirim($id)
-		{
-			
-		}
+	    }
 
 
 	    /*
@@ -312,15 +231,8 @@
 	    |
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
-			//Your code here
-			$kurir = DB::table('tb_kurir')->whereNull('deleted_at')->get();
-	        foreach ($kurir as $k) {
-				$str = 'Set '.$k->keterangan;
-				$slug = str_slug($str,'_');
-				if($button_name == $slug){
-					DB::table('tb_penjualan')->whereIn('id',$id_selected)->update(['id_kurir'=>$k->id]);
-				}
-			}
+	        //Your code here
+	            
 	    }
 
 
@@ -355,7 +267,7 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-
+			$postdata['created_user'] = CRUDBooster::myName();
 	    }
 
 	    /* 
@@ -380,7 +292,7 @@
 	    */
 	    public function hook_before_edit(&$postdata,$id) {        
 	        //Your code here
-
+			$postdata['updated_user'] = CRUDBooster::myName();
 	    }
 
 	    /* 
@@ -416,7 +328,7 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
+			DB::table('tb_slider')->where('id',$id)->update([$postdata['deleted_user'] => CRUDBooster::myName()]);
 	    }
 
 

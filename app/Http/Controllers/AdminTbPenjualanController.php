@@ -48,6 +48,7 @@
 			$this->col[] = ["label"=>"Catatan","name"=>"keterangan","callback"=>function($row){
 				return (empty($row->keterangan) ? '-' : $row->keterangan);
 			}];
+			$this->col[] = ["label"=>"Kurir","name"=>"id_kurir",'join'=>'tb_kurir,keterangan'];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			$kode = DB::table('tb_penjualan')->max('id') + 1;
@@ -157,7 +158,12 @@
 	        |
 	        */
 	        $this->button_selected = array();
-
+			$kurir = DB::table('tb_kurir')->whereNull('deleted_at')->get();
+			foreach ($kurir as $k) {
+				$str = 'Set '.$k->keterangan;
+				$slug = str_slug($str,'_');
+				$this->button_selected[] = ['label'=>$str,'icon'=>'fa fa-check','name'=>$slug];
+			}		
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -417,7 +423,14 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-
+			$kurir = DB::table('tb_kurir')->whereNull('deleted_at')->get();
+	        foreach ($kurir as $k) {
+				$str = 'Set '.$k->keterangan;
+				$slug = str_slug($str,'_');
+				if($button_name == $slug){
+					DB::table('tb_penjualan')->whereIn('id',$id_selected)->update(['id_kurir'=>$k->id]);
+				}
+			}
 	    }
 
 
